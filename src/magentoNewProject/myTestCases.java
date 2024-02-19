@@ -11,7 +11,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class myTestCases extends parameters {
-	
 
 	@BeforeTest
 	public void setup() {
@@ -69,8 +68,11 @@ public class myTestCases extends parameters {
 
 		WebElement bagContainer = driver.findElement(By.cssSelector(".products.list.items.product-items"));
 		List<WebElement> allItems = bagContainer.findElements(By.className("product-item"));
+		int count =0;
 		for (int i = 0; i < allItems.size(); i++)
 			if (i % 2 != 0) {
+				if(i != 7) {// the Impulse Duffle item is not available
+					count=count+1;
 				allItems.get(i).click();
 				WebElement addButton = driver.findElement(By.id("product-addtocart-button"));
 				addButton.click();
@@ -79,10 +81,10 @@ public class myTestCases extends parameters {
 				bagContainer = driver.findElement(By.cssSelector(".products.list.items.product-items"));
 				allItems = bagContainer.findElements(By.className("product-item"));
 
-			} // the Impulse Duffle item is not available
-		String expItemInTheCart = "5";
+			}} 
+		int expItemInTheCart = count;
 		WebElement numberOfItemInCart = driver.findElement(By.className("counter-number"));
-		String itemInTheCart = numberOfItemInCart.getText();
+		int itemInTheCart = Integer.parseInt(numberOfItemInCart.getText());
 		Assert.assertEquals(itemInTheCart, expItemInTheCart);
 
 	}
