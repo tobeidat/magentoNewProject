@@ -2,9 +2,11 @@ package magentoNewProject;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -68,24 +70,73 @@ public class myTestCases extends parameters {
 
 		WebElement bagContainer = driver.findElement(By.cssSelector(".products.list.items.product-items"));
 		List<WebElement> allItems = bagContainer.findElements(By.className("product-item"));
-		int count =0;
+		int count = 0;
 		for (int i = 0; i < allItems.size(); i++)
 			if (i % 2 != 0) {
-				if(i != 7) {// the Impulse Duffle item is not available
-					count=count+1;
-				allItems.get(i).click();
-				WebElement addButton = driver.findElement(By.id("product-addtocart-button"));
-				addButton.click();
-				Thread.sleep(2000);
-				driver.get(bagSection);
-				bagContainer = driver.findElement(By.cssSelector(".products.list.items.product-items"));
-				allItems = bagContainer.findElements(By.className("product-item"));
+				if (i != 7) {// the Impulse Duffle item is not available
+					count = count + 1;
+					allItems.get(i).click();
+					WebElement addButton = driver.findElement(By.id("product-addtocart-button"));
+					addButton.click();
+					Thread.sleep(2000);
+					driver.get(bagSection);
+					bagContainer = driver.findElement(By.cssSelector(".products.list.items.product-items"));
+					allItems = bagContainer.findElements(By.className("product-item"));
 
-			}} 
+				}
+			}
+		Thread.sleep(3000);
 		int expItemInTheCart = count;
-		WebElement numberOfItemInCart = driver.findElement(By.className("counter-number"));
+		WebElement numberOfItemInCart = driver.findElement(By.className("counter-label"));
 		int itemInTheCart = Integer.parseInt(numberOfItemInCart.getText());
 		Assert.assertEquals(itemInTheCart, expItemInTheCart);
+
+	}
+
+	@Test(priority = 5)
+	public void checkOutProccess() throws InterruptedException {
+
+		WebElement theCartElement = driver.findElement(By.className("showcart"));
+		theCartElement.click();
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+		WebElement checkoutButton = driver.findElement(By.id("top-cart-btn-checkout"));
+		checkoutButton.click();
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		WebElement company = driver.findElement(By.name("company"));
+		company.sendKeys("Mawdoo3");
+
+		WebElement street = driver.findElement(By.name("street[0]"));
+		street.sendKeys("Yaser Sabaaneh Street");
+
+		WebElement city = driver.findElement(By.name("city"));
+		city.sendKeys("Amman");
+
+		WebElement region = driver.findElement(By.name("region_id"));
+		Select select = new Select(region);
+		select.selectByValue("2");
+
+		WebElement postcode = driver.findElement(By.name("postcode"));
+		postcode.sendKeys("12345-6789");
+
+		WebElement phone = driver.findElement(By.name("telephone"));
+		phone.sendKeys("0798886554");
+
+		Thread.sleep(5000);
+
+		List<WebElement> tab = driver.findElements(By.className("radio"));
+		Random rand = new Random();
+		int num = rand.nextInt(2);
+		tab.get(num).click();
+
+		WebElement nextButton = driver.findElement(By.cssSelector(".button.action.continue.primary"));
+		nextButton.click();
+		
+		Thread.sleep(7000);
+
+		WebElement placeOrder = driver.findElement(By.className("checkout"));
+		placeOrder.click();
 
 	}
 

@@ -7,7 +7,7 @@
         <methods>
           <include name="setup"/>
           <include name="postTest"/>
-          <include name="bagSection"/>
+          <include name="checkOutProccess"/>
         </methods>
       </class> <!-- magentoNewProject.myTestCases -->
     </classes>
